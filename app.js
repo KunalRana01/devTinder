@@ -9,9 +9,16 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { validateSignUpData } = require("./utils/validation.js");
 const { authenticateUser } = require("./middlewares/auth.js");
+const authRouter = require("./routes/authRouter.js");
+const profileRouter = require("./routes/profileRouter.js");
+const requestsRouter = require("./routes/requestsRouter.js");
 
 app.use(express.json());
 app.use(cookieParser());
+
+
+//Define route handlers for type of routes...
+app.use("/" , authRouter);
 
 
 app.get("/feed" ,async (req,res)=>{
@@ -24,67 +31,6 @@ app.get("/feed" ,async (req,res)=>{
     }
 });
 
-
-app.post("/signup" , async (req,res)=>{
-    
-    
-    
-    try{
-        //validate the data from the api
-        validateSignUpData(req);
-
-        //encrypt the pass
-        const { firstname, email, age, password} = req.body;
-
-        const hashedPass = await bcrypt.hash(password, 10);
-        console.log(hashedPass);
-
-        const user = new User({
-            firstname,
-            email,
-            age,
-            password: hashedPass
-        })
-        await user.save();
-        res.send("User creation success !");
-
-    }catch(err){
-        res.status(400).send(err.message);
-    }
-})
-
-
-app.post("/login" , async (req,res)=>{
-
-    try{
-
-        const{email,password} = req.body;
-
-        //first check if the user exists already...
-
-        let userExists = await User.findOne({email:email});
-
-        if(!userExists){
-            return res.status(404).send("User not registered , please register first...");
-        }
-
-        const result = await bcrypt.compare(password, userExists.password);
-
-        if (!result) {
-            return res.status(404).send("Username or password incorrect !");
-        } else {
-
-            const token = await jwt.sign({ _id: userExists._id }, process.env.JWT_SECRET);
-
-            res.cookie("token", token, { expires: new Date(Date.now() + 900000)});
-            return res.send("Login successfull !");
-        }
-
-    }catch(err){
-        res.send("Unknown Error");
-    }
-
-})
 
 
 app.patch("/update" , async (req,res)=>{
@@ -102,24 +48,6 @@ app.patch("/update" , async (req,res)=>{
     }
 
 });
-
-
-app.get("/profile" , authenticateUser ,async (req,res)=>{
-
-    try{
-        const user = req.user;
-        return res.send(user);
-    }catch(err){
-        res.status(400).send("Error : " + err.message);
-    }
-
-})
-
-app.get("/logout" , authenticateUser , (req,res)=>{
-    res.cookie("token" , "");
-    return res.send("Logged Out Successfully...");
-})  
-
 
 
 connectDB().then(() => {

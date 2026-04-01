@@ -55,12 +55,7 @@ const userSchema = new Schema({
     gender:{
         type:String,
         lowercase: true,
-        validate (value){
-            if(!["male" , "female" , "others"].includes(value)){
-                throw new Error("Error : Unknown Gender");
-            }
-            return true;
-        }
+        enum: ["male", "female", "others"]
     }
 },{timestamps:true});
 

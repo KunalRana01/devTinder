@@ -2,7 +2,7 @@ const validator = require("validator");
 
 function validateSignUpData(req){
 
-    let { firstname, email, age, password } = req.body;
+    let { firstname, email, password } = req.body;
 
     if(!firstname){
         throw new Error("First name is required");
