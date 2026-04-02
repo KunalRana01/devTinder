@@ -15,7 +15,6 @@ const userSchema = new Schema({
         type:String,
         lowercase:true,
         trim:true,
-        minLength: 4,
         maxLength: 50
     },
     email:{
@@ -28,7 +27,6 @@ const userSchema = new Schema({
         validate : function(value){
             if(!validator.isEmail(value)){
                 throw new Error("Error , invalid email address");
-                return false;
             } 
             return true;
         }   
@@ -43,8 +41,6 @@ const userSchema = new Schema({
         type:String,
         required:true,
         trim:true,
-        minLength:8,
-        maxLength : 128,
         validate : function(value){
             if(!validator.isStrongPassword(value)){
                 throw new Error ("Error : weak password , please create a strong password  !");
@@ -52,10 +48,28 @@ const userSchema = new Schema({
             return true;
         }
     },
+    about:{
+        type:String,
+        default:"This is the default about of the user",
+        trim: true,
+        minLength: 4,
+        maxLength: 100
+    },
     gender:{
         type:String,
         lowercase: true,
         enum: ["male", "female", "others"]
+    },
+    photoUrl:{
+        type:String,
+        lowercase:true,
+        default: "https://img.icons8.com/?size=100&id=IerOpHeUt2OH&format=png&color=000000",
+        validate : function(value){
+            if (!validator.isURL(value)){
+                return false;
+            }
+            return true;
+        }
     }
 },{timestamps:true});
 

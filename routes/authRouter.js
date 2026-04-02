@@ -14,7 +14,7 @@ router.post("/signup", async (req, res) => {
         // validateSignUpData(req);
 
         //encrypt the pass
-        const { firstname, email, age, password ,gender } = req.body;
+        const { firstname, email, age, password ,gender , photoUrl ,about} = req.body;
 
         const hashedPass = await bcrypt.hash(password, 10);
 
@@ -23,7 +23,9 @@ router.post("/signup", async (req, res) => {
             email,
             age,
             password: hashedPass,
-            gender
+            gender,
+            photoUrl,
+            about
         })
         await user.save();
         res.send("User creation success !");
@@ -56,7 +58,7 @@ router.post("/login", async (req, res) => {
 
             const token = await jwt.sign({ _id: userExists._id }, process.env.JWT_SECRET);
 
-            res.cookie("token", token, { expires: new Date(Date.now() + 900000) });
+            res.cookie("token", token);
             return res.send("Login successfull !");
         }
 

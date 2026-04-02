@@ -19,6 +19,7 @@ app.use(cookieParser());
 
 //Define route handlers for type of routes...
 app.use("/" , authRouter);
+app.use("/" , profileRouter);
 
 
 app.get("/feed" ,async (req,res)=>{
