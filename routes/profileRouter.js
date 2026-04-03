@@ -64,9 +64,6 @@ router.patch("/profile/password" , authenticateUser , async (req,res)=>{
     }
     
 
-
-
-
 });
 
 module.exports = router;
