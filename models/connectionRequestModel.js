@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { __esModule } = require("validator/lib/isAlpha");
 
 const {Schema}  = mongoose;
 
@@ -7,11 +6,13 @@ const connectionRequestSchema = new Schema ({
 
     fromUserId : {
         type : mongoose.Schema.Types.ObjectId,
-        required:true
+        required:true,
+        ref:"user"
     },
     toUserId :{
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref:"user"
     },
     status : {
         type:String,

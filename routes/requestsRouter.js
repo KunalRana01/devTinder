@@ -73,5 +73,51 @@ router.post("/request/send/:status/:toUserId", authenticateUser , async (req,res
 });
 
 
+router.post("/requests/review/:status/:requestId", authenticateUser , async (req,res)=>{
+
+    try{    
+
+        const loggedInUser = req.user._id;
+        const {status , requestId} = req.params;
+
+        const allowedStatus = ["accepted" , "rejected"];
+
+        if (!allowedStatus.includes(status)){
+            return res.status(400).json({
+                message : "Invalid status request."
+            })
+        }
+
+        //check if the requestId exists in the db..
+        const connectionRequestExists = await ConnectionRequest.findOne({
+            _id:requestId,
+            toUserId : loggedInUser,
+            status:"interested"
+        })
+
+        if(!connectionRequestExists){
+            return res.status(400).json({
+                message : "Connection request doesn't exist."
+            })
+        }
+
+
+        connectionRequestExists.status = status;
+        const data = await connectionRequestExists.save();
+
+        res.json({
+            message : `Connection request ${status}`,
+            data
+        })
+
+
+    }catch(err){
+        return res.json({
+            error : err.message
+        });
+    }
+
+})
+
 
 module.exports = router;

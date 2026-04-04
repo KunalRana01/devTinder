@@ -12,15 +12,17 @@ const { authenticateUser } = require("./middlewares/auth.js");
 const authRouter = require("./routes/authRouter.js");
 const profileRouter = require("./routes/profileRouter.js");
 const requestsRouter = require("./routes/requestsRouter.js");
+const userRouter = require("./routes/userRouter.js");
+
 
 app.use(express.json());
 app.use(cookieParser());
 
 
-//Define route handlers for type of routes...
 app.use("/" , authRouter);
 app.use("/" , profileRouter);
 app.use("/", requestsRouter);
+app.use("/" , userRouter);
 
 
 app.get("/feed" ,async (req,res)=>{
