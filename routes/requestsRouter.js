@@ -22,7 +22,6 @@ router.post("/request/send/:status/:toUserId", authenticateUser , async (req,res
 
         //check whether the toUserId is a valid objectId
         const isToUserIdValid = await User.findById(toUserId);
-        console.log(isToUserIdValid);
 
         if(!isToUserIdValid){
             throw new Error("Unknown error while sending the request , the user might not exist");

@@ -18,7 +18,6 @@ router.get("/profile/view", authenticateUser, async (req, res) => {
 
 
 router.patch("/profile/edit", authenticateUser , async (req,res)=>{
-    //validate the req body data...
 
     try{
 
